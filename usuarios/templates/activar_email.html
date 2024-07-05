@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Inicio</title>
+</head>
+<body>
+    {% autoescape off %}  
+        Estimado <b>{{ user.username }}</b>,
+        Por favor acceda al enlace para validar su cuenta, <br>
+        <a href="http://{{ domain }}{% url 'usuarios:activar' uidb64=uid token=token %}">http://{{ domain }}{% url 'usuarios:activar' uidb64=uid token=token %}</a>
+    {% endautoescape %}  
+</body>
+</html>

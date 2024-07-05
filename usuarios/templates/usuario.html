@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Información de Usuario</title>
+</head>
+<body>
+    {% include 'base.html' %}
+    {% include 'base_gestion.html' %}
+
+    {% block content %}
+    <main class="container py-3">
+        <div class="row">
+            <h1 class="text-center">Información de Usuario</h1>
+                <div class="col-md-4 offset-md-4 py-3">
+                    <div class="card card-body bg-light">
+                        <ul class="list-group ">
+                            <li class="list-group-item">Nombre: {{ info.nombre }}</li>
+                            <li class="list-group-item">Apellidos: {{ info.apellidos }}</li>
+                            <li class="list-group-item">Email: {{ info.email }}</li>
+                            <li class="list-group-item">Teléfono: {{ info.telefono }}</li>
+                            <li class="list-group-item">Dirección: {{ info.direccion }}</li>
+                            <li class="list-group-item">CP: {{ info.cp }}</li>
+                            <li class="list-group-item">Población: {{ info.poblacion }}</li>
+                            <li class="list-group-item">Provincia: {{ info.provincia }}</li>
+                        </ul>
+                    </div>
+                </div>
+        </div>
+    </main>
+    {% endblock %}
+</body>
+</html>
