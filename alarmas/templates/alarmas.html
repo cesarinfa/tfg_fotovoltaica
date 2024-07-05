@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Alarmas</title>
+
+</head>
+<body>
+    {% extends 'base.html' %}
+
+    {% block content %}
+    <main class="container py-3">
+        <div class="row pb-4">
+            <div class="col">
+                <div class="card card-header">
+                    <h1 class="text-center">Alarmas</h1>
+                 </div>
+            </div>
+        </div>
+        {% if total == 0 %}
+             <div class="row pb-3">
+                <div class="col">
+                    <div class="card card-body">
+                        <div class="ms-2 me-auto">
+                            <p>No hay ninguna instalación asociada a este usuario</p>
+                        </div>
+                     </div>
+                </div>
+            </div>
+        {% else %}
+
+            <div class="row pb-3">
+                <div class="col">
+                    <div class="card card-body">
+                        <form method="get">
+                            {{ myFilter.form.as_p }}
+                            <button class="btn btn-primary" type="submit"> Filtrar </button>
+                        </form>
+                     </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md">
+                    <div class="card card-body">
+                        <table class="table table-striped table-sm">
+                            <tr>
+                                <th scope="col">Id</th>
+                                <th scope="col">Fecha</th>
+                                <th scope="col">Instalación</th>
+                                <th scope="col">Estado</th>
+                                <th scope="col">Tipo</th>
+                                <th scope="col">Descripción</th>
+                            </tr>
+
+                            <tbody>
+                                {%  for alarma in listado_alarmas %}
+                                    {% if alarma.estado == 'SOLUCIONADA' %}
+                                        <tr class="table-success">
+                                    {% else %}
+                                        <tr class="table-danger">
+                                    {% endif %}
+                                    <th scope="row">{{ forloop.counter }}</th>
+                                    <td>{{ alarma.fecha }}</td>
+                                    <td>
+                                        {{ alarma.instalacion }}
+                                    </td>
+                                    <td>{{ alarma.estado }}</td>
+                                    <td>{{ alarma.tipo }}</td>
+                                    <td>{{ alarma.descripcion }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                     </div>
+                </div>
+            </div>
+        {% endif %}
+
+
+    </main>
+    {% endblock %}
+</body>
+</html>
