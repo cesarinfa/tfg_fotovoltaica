@@ -1,12 +1,12 @@
-from django.shortcuts import render,get_object_or_404
+from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from .models import Alarmas
 from usuarios.models import UserData,UsuarioxInst
 from instalaciones.models import Instalacion
 from .filters import AlarmasFilter
 
-# Create your views here.
 
+# Vista para alarmas
 @login_required()
 def alarmas(request):
 
@@ -16,10 +16,13 @@ def alarmas(request):
 
     for uD in userDatas:
         if uD.instalador == 0:
+
+            # Instalaciones de usuario instalador
             instalaciones = Instalacion.objects.filter(user_id=request.user.id)
             num = instalaciones.count()
         else:
 
+            # Instalaciones de usuario propietario
             usuarioxinst =UsuarioxInst.objects.filter(user_id=request.user.id)
 
             if (usuarioxinst.count()==0):
@@ -30,6 +33,8 @@ def alarmas(request):
 
 
     if (num != 0):
+
+        # Ninguna instalación del usuario
 
         listado_alarmas = Alarmas.objects.filter(instalacion_id__in=instalaciones)
 

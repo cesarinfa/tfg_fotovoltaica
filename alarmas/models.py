@@ -1,10 +1,7 @@
 from django.db import models
 from instalaciones.models import Instalacion
 
-# Create your models here.
-
-
-
+# Modelo Alarmas
 class Alarmas(models.Model):
 
     ESTADOS = (('ACTIVA','ACTIVA'),('SOLUCIONADA','SOLUCIONADA'))
