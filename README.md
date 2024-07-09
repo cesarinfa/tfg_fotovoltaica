@@ -39,14 +39,21 @@ El objetivo de este trabajo es el análisis, diseño y desarrollo de una aplicac
     <code>https://cdn.jsdelivr.net/npm/chart.js</code>
     
 <h2>Pantallazos</h2>
-
 Inicio de sesión:
-![imagen](https://github.com/cesarinfa/tfg_fotovoltaica/assets/159906281/41a7bfdb-d5f2-4507-8119-b130a41591c8)
+
+
+![imagen](https://github.com/cesarinfa/tfg_fotovoltaica/assets/159906281/22914e79-e75f-44a1-862a-cc639d758dee)
+
 
 Menú de instalaciones:
 ![imagen](https://github.com/cesarinfa/tfg_fotovoltaica/assets/159906281/b67f1eb6-8fbe-4526-a828-ceb2a58fc021)
 
-Datos históricos
+
+Predicción de energía generada:
+![imagen](https://github.com/cesarinfa/tfg_fotovoltaica/assets/159906281/21617494-1581-495a-9134-a270c2a3a66a)
+
+
+Datos históricos:
 ![imagen](https://github.com/cesarinfa/tfg_fotovoltaica/assets/159906281/d1510ac5-7c4a-4651-8812-6f8be47f1a79)
 
 
