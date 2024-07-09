@@ -2,9 +2,7 @@ import sqlite3
 import pandas as pd
 from datetime import date
 
-# Create your connection.
-
-
+# Obtener históricos al cargar la página de consumos
 def graficas(insta):
     connect = sqlite3.connect('db.sqlite3')
     pd.options.plotting.backend = "plotly"
@@ -19,8 +17,6 @@ def graficas(insta):
 
     df3 = pd.read_sql_query("SELECT mes,year,consumida,generada FROM instalaciones_historico_mes where instalacion_id=" + str(
             insta.id) + " and year=" + str(date.today().year), connect)
-
-
 
     context = {
         "horas_horas": df.hora,
@@ -38,6 +34,7 @@ def graficas(insta):
 
     return (context)
 
+# Obtener históricos al consultar por rango de fechas
 def graficas_rango(insta, date1, date2):
     connect = sqlite3.connect('db.sqlite3')
     pd.options.plotting.backend = "plotly"
@@ -56,8 +53,6 @@ def graficas_rango(insta, date1, date2):
 
     df4 = pd.read_sql_query("SELECT dia,consumida,generada FROM instalaciones_historico_dia where instalacion_id="
                             + str(insta.id) + " and dia>\"" + date1 +"\" and dia<\"" + date2 +"\" order by dia",connect)
-
-
 
     context = {
         "horas_horas": df.hora,
@@ -78,6 +73,7 @@ def graficas_rango(insta, date1, date2):
 
     return (context)
 
+# Obtener históricos al descargar datos por rango de fechas
 def graficas_historico(insta, date1, date2):
     connect = sqlite3.connect('db.sqlite3')
     pd.options.plotting.backend = "plotly"

@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Instalación</title>
+
+</head>
+<body>
+
+    {% include 'base.html' %}
+
+    {% include 'base_instalacion.html' %}
+
+    {% block content %}
+
+
+
+    <div class="container py-3">
+        <div class="row">
+            <div class="text-center py-2">
+                <div>
+                    <h1> {{ insta.nombre }}</h1>
+                    <p> Dirección: {{ insta.direccion }} , {{ insta.cp }}, {{ insta.poblacion }}, {{ insta.provincia }}</p>
+                </div>
+            </div>
+        </div>
+
+
+
+        {%  if num_alarmas > 0 %}
+            <div class="row" onclick="location.href='/alarmas/listado/?instalacion='+{{ insta.id }}+'&estado=ACTIVA&tipo=&fecha_inicio=&fecha_final='">
+                <div class="card mb-4 box-shadow bg-danger mx-auto text-center" style="width: 40%;">
+                    <div class="card-body align-items-center">
+                        <h4 class="text-white"> Alarmas </h4>
+                        {%  for alarma in alarmas %}
+                            <ul class="list-unstyled mt-3 mb-4">
+                                <li class="text-white">
+                                     {{ alarma.fecha }} - {{  alarma.descripcion }}
+                                </li>
+                            </ul>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {%  endif %}
+        <div class="row justify-content-center text-center mt-1 mb-4">
+            <h4>Datos Actuales</h4>
+        </div>
+        <div class="row justify-content-center text-center mt-1 mb-4">
+
+            <div class="card mb-2 box-shadow color-primary" style="width:220px">
+                <div class="card-header">
+                    <h4>Consumida</h4>
+                </div>
+                <div class="card-body align-items-center" style="height:60px">
+                    <ul class="list-unstyled">
+                        <li>
+                            <h4>{{ valores.consumida }} kW</h4>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card mb-2 box-shadow" style="width:220px">
+                <div class="card-header bg-sucess">
+                    <h4>Generada</h4>
+                </div>
+                <div class="card-body align-items-center" style="height:60px">
+                    <ul class="list-unstyled">
+                        <li>
+                            <h4>{{ valores.generada }} kW</h4>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card mb-2 box-shadow" style="width:220px">
+                <div class="card-header">
+                    <h4>Red Eléctrica</h4>
+                </div>
+                <div class="card-body align-items-center" style="height:60px">
+                    <ul class="list-unstyled">
+                        <li>
+                            <h4>{{ valores.red_electrica }} kW</h4>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+        <div class="row justify-content-center text-center mt-1 mb-4">
+            <h4>Datos Históricos</h4>
+        </div>
+        <div class="row ">
+            <div class="mb-3 col-3 text-center" style="display:inline-block;">
+
+                <form style="margin-top:135px;" action="" method="POST">
+                    {% csrf_token %}
+                    <div class="mt-6 mb-6">
+                        {{ form }}
+                    </div>
+                    <div>
+                        <button class="btn btn-primary mt-5" type="submit" name="buscar" >Mostrar gráfica</button>
+                    </div>
+                    <div>
+                        <button class="btn btn-secondary mt-3" type="submit" name="historico" >Descargar histórico</button>
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="mb-3 col-9" style="display:inline-block;">
+                <div class="text-center mb-3">
+                    <a class="btn btn-secondary mb-2" style="width:120px; margin-left:15px;" onclick="cambiar_hora()">Día</a>
+                    <a class="btn btn-secondary mb-2" style="width:120px; margin-left:15px;" onclick="cambiar_dia()">Mes</a>
+                    <a class="btn btn-secondary mb-2" style="width:120px; margin-left:15px;" onclick="cambiar_mes()">Año</a>
+                </div>
+
+                  <canvas class="mb-5" id="myChart" width="400" height="200"></canvas>
+                  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js" integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+                  <script src="https://cdn.jsdelivr.net/npm/moment@^2"></script>
+                  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@^1"></script>
+                  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js"></script>
+                  <script src="https://cdn.jsdelivr.net/npm/luxon@3.3.0/build/global/luxon.min.js"></script>
+                  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.3.1/dist/chartjs-adapter-luxon.umd.min.js"></script>
+                  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-gradient@0.6.1/dist/chartjs-plugin-gradient.min.js"></script>
+                  <script>
+
+                  const ctx = document.getElementById('myChart').getContext('2d');
+
+                  {% if tipo == "GET" %}
+                  myChart = new Chart(ctx, {
+                      type: 'line',
+                      data: {
+                        labels : [{% for item in graficas.horas_horas %}"{{ item }}",{% endfor %}],
+                          datasets: [{
+                            label: "Consumida",
+                            data : [{% for item in graficas.horas_consumidas %}{{ item }},{% endfor %}],
+                            backgroundColor: 'rgba(192, 15, 25, 0.2)',
+                            borderColor: 'rgba(192, 15, 25, 1)',
+                            borderWidth: 1,
+                              fill: {
+                                target: 'origin',
+                                below: 'rgb(255, 0, 0)'    // And blue below the origin
+                              }
+                          },{
+                            label: "Generada",
+                            data : [{% for item in graficas.horas_generadas %}{{ item }},{% endfor %}],
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1,
+                              fill: {
+                                target: 'origin',
+                                below: 'rgb(0, 255, 0)'    // And blue below the origin
+                              }
+                          }]
+                      },
+                      options: {
+                          scales: {
+                              y: {
+                                  beginAtZero: true
+                              },
+
+                              x: {
+                                type: 'time',
+                                time: {
+                                  unit: 'hour',
+                                  displayFormats: {
+                                    hour: 'HH:mm'
+                                  },
+                                }
+                              }
+                          }
+
+                      }
+                  });
+
+                  {% elif tipo == "POST" %}
+
+
+                      myChart = new Chart(ctx, {
+                          type: 'line',
+                          data: {
+                            labels : [{% for item in graficas.rango_dia %}"{{ item }}",{% endfor %}],
+                              datasets: [{
+                                label: "Consumida",
+                                data : [{% for item in graficas.rango_consumidas %}{{ item }},{% endfor %}],
+                                backgroundColor: 'rgba(192, 15, 25, 0.2)',
+                                borderColor: 'rgba(192, 15, 25, 1)',
+                                borderWidth: 1,
+                                  fill: {
+                                    target: 'origin',
+                                    below: 'rgb(255, 0, 0)'    // And blue below the origin
+                                  }
+                              },{
+                                label: "Generada",
+                                data : [{% for item in graficas.rango_generadas %}{{ item }},{% endfor %}],
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 1,
+                                  fill: {
+                                    target: 'origin',
+                                    below: 'rgb(0, 255, 0)'    // And blue below the origin
+                                  }
+                              }]
+                          },
+                          options: {
+                              scales: {
+                                  y: {
+                                      beginAtZero: true
+                                  },
+
+                              }
+
+                          }
+                      });
+
+                  {% endif %}
+
+                  function cambiar_hora(){
+                      myChart.destroy();
+
+                      myChart = new Chart(ctx, {
+                          type: 'line',
+                          data: {
+                            labels : [{% for item in graficas.horas_horas %}"{{ item }}",{% endfor %}],
+                              datasets: [{
+                                label: "Consumida",
+                                data : [{% for item in graficas.horas_consumidas %}{{ item }},{% endfor %}],
+                                backgroundColor: 'rgba(192, 15, 25, 0.2)',
+                                borderColor: 'rgba(192, 15, 25, 1)',
+                                borderWidth: 1,
+                                  fill: {
+                                    target: 'origin',
+                                    below: 'rgb(255, 0, 0)'    // And blue below the origin
+                                  }
+                              },{
+                                label: "Generada",
+                                data : [{% for item in graficas.horas_generadas %}{{ item }},{% endfor %}],
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 1,
+                                  fill: {
+                                    target: 'origin',
+                                    below: 'rgb(0, 255, 0)'    // And blue below the origin
+                                  }
+                              }]
+                          },
+                          options: {
+                              scales: {
+                                  y: {
+                                      beginAtZero: true
+                                  },
+
+                                  x: {
+                                    type: 'time',
+                                    time: {
+                                      unit: 'hour',
+                                      displayFormats: {
+                                        hour: 'HH:mm'
+                                      },
+                                    }
+                                  }
+                              }
+
+                          }
+                      });
+                  }
+
+                  function cambiar_dia(){
+                      myChart.destroy();
+
+                      myChart = new Chart(ctx, {
+                          type: 'bar',
+                          data: {
+                            labels : [{% for item in graficas.dias_dia %}"{{ item }}",{% endfor %}],
+                              datasets: [{
+                                label: "Consumida",
+                                data : [{% for item in graficas.dias_consumidas %}{{ item }},{% endfor %}],
+                                backgroundColor: 'rgba(192, 15, 25, 0.2)',
+                                borderColor: 'rgba(192, 15, 25, 1)',
+                                borderWidth: 1,
+                                  fill: {
+                                    target: 'origin',
+                                    below: 'rgb(255, 0, 0)'    // And blue below the origin
+                                  }
+                              },{
+                                label: "Generada",
+                                data : [{% for item in graficas.dias_generadas %}{{ item }},{% endfor %}],
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 1,
+                                  fill: {
+                                    target: 'origin',
+                                    below: 'rgb(0, 255, 0)'    // And blue below the origin
+                                  }
+                              }]
+                          },
+                          options: {
+                              scales: {
+                                  y: {
+                                      beginAtZero: true
+                                  },
+
+                              }
+
+                          }
+                      });
+
+                  }
+
+                  function cambiar_mes() {
+                      myChart.destroy();
+
+                      myChart = new Chart(ctx, {
+                          type: 'bar',
+                          data: {
+                              labels: [{% for item in graficas.meses_mes %}"{{ item }}",{% endfor %}],
+                              datasets: [{
+                                  label: "Consumida",
+                                  data: [{% for item in graficas.meses_consumidas %}{{ item }}, {% endfor %}],
+                                  backgroundColor: 'rgba(192, 15, 25, 0.2)',
+                                  borderColor: 'rgba(192, 15, 25, 1)',
+                                  borderWidth: 1,
+                                  fill: {
+                                      target: 'origin',
+                                      below: 'rgb(255, 0, 0)'    // And blue below the origin
+                                  }
+                              }, {
+                                  label: "Generada",
+                                  data: [{% for item in graficas.meses_generadas %}{{ item }}, {% endfor %}],
+                                  backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                  borderColor: 'rgba(75, 192, 192, 1)',
+                                  borderWidth: 1,
+                                  fill: {
+                                      target: 'origin',
+                                      below: 'rgb(0, 255, 0)'    // And blue below the origin
+                                  }
+                              }]
+                          },
+                          options: {
+                              scales: {
+                                  y: {
+                                      beginAtZero: true
+                                  },
+
+                              }
+
+                          }
+                      });
+
+                  }
+                  </script>
+            </div>
+        </div>
+
+
+    </div>
+
+    {% endblock %}
+</body>
+</html>

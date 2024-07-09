@@ -1,8 +1,7 @@
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
 from .models import Instalacion
 from django import forms
 
+# Formulario de registro de instalación
 class InstalacionForm(forms.Form):
     nombre = forms.CharField(max_length=50)
     direccion = forms.CharField(max_length=100)
@@ -17,12 +16,14 @@ class InstalacionForm(forms.Form):
     fabricante_inv = forms.CharField(max_length=30)
     nserie_inv = forms.CharField(max_length=30)
 
+    # Campos a mostrar
     class Meta:
         model = Instalacion
         fields = ['nombre','direccion','cp','poblacion','provincia','latitud','longitud','fecha_inst', 'modelo_inv',
                   'fabricante_inv', 'nserie_inv']
 
 
+# Formulario para históricos
 class HistoricoForm(forms.Form):
     desde = forms.DateField(widget = forms.SelectDateWidget)
     hasta = forms.DateField(widget = forms.SelectDateWidget)

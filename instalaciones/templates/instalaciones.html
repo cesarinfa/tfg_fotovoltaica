@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Instalaciones</title>
+
+</head>
+<style>
+    .circulo {
+        content: '';
+        display: inline-block;
+        border-radius: 50%;
+         width:12px;
+        height: 12px; animation: blinker 1.5s cubic-bezier(.5, 0, 1, 1) infinite alternate;
+    }
+
+    .cred {
+        background-color: red;
+        color: red;
+        border: 1px red solid;
+    }
+
+    .cgreen {
+        background-color: green;
+        color: green;
+        border: 1px green solid;
+    }
+</style>
+<body>
+    {% extends 'base.html' %}
+
+    {% block content %}
+    <main class="container py-3">
+        <div class="row">
+            {% if usuario.instalador == 0 %}
+            <h1 class="text-center">Instalaciones de {{ usuario.empresa }}</h1>
+            {% else %}
+            <h1 class="text-center">Instalaciones de {{ usuario.nombre }} {{ usuario.apellidos }}</h1>
+            {% endif %}
+        </div>
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                {{ mapa | safe }}
+            </div>
+            <div class="col-md-3"></div>
+        </div>
+        <div class="row mt-3">
+            {% if marcadores.count == 0 %}
+                <ul class="card card-body bg-light">
+                    <div class="text-center">
+                        <p>No hay ninguna instalación asociada a este usuario</p>
+                    </div>
+                </ul>
+            {% else %}
+                <ul class="card card-body bg-light list-group">
+                    <table class="table table-striped table-sm mb-3 text-center align-middle">
+                        <tr>
+                            <th scope="col" class="col-md-3">Instalación</th>
+                            <th scope="col">Dirección</th>
+                            <th scope="col">Población</th>
+                            <th scope="col">Energía Generada Hoy</th>
+                            <th scope="col">Predicción Energía Hoy</th>
+                        </tr>
+                        {% for marcador in marcadores %}
+                            <tr style="height:70px;">
+                                <th style="font-size:22px;">
+                                    <a href="{% url 'info_consumos' marcador.id %}" class="">
+                                        {{ marcador.nombre }}
+
+                                        {% for alarma in alarmas %}
+                                            {% if alarma.id == marcador.id %}
+                                                {% if alarma.count > 0 %}
+                                                    <i class="circulo cred"></i>
+                                                {%  else %}
+                                                    <i class="circulo cgreen"></i>
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </a>
+                                </th>
+                                <th style="font-size:18px;">
+                                    {{ marcador.direccion }}, {{ marcador.cp }}
+                                </th>
+                                <th style="font-size:18px;">
+                                    {{ marcador.poblacion}}
+                                </th>
+                                <th style="font-size:18px;">
+                                    {% for vl in marcador.valores %}
+                                       {{ vl.generada }} kW/h
+                                    {% endfor %}
+                                </th>
+                                <th style="font-size:18px;">
+                                    {% for pd in marcador.prediccion %}
+                                       {{ pd.prediccion }} kW/h
+                                    {% endfor %}
+                                </th>
+
+                        </tr>
+                        {% endfor %}
+                    {% endif %}
+                    </table>
+                </ul>
+
+            {% if usuario.instalador == 0 %}
+            <div class="text-center py-2 mt-2">
+                <a href="{% url 'nueva_instalacion'  %}" class="btn btn-primary">Nueva instalación</a>
+            </div>
+            {% endif %}
+        </div>
+    </main>
+    {% endblock %}
+</body>
+</html>

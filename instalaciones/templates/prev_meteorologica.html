@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Instalación</title>
+
+</head>
+<body>
+
+    {% include 'base.html' %}
+
+    {% include 'base_instalacion.html' %}
+
+    {% block content %}
+
+
+
+    <div class="container py-3">
+        <div class="row">
+            <div class="text-center py-2">
+                <div>
+                    <h1> {{ insta.nombre }}</h1>
+                    <p> Dirección: {{ insta.direccion }} , {{ insta.cp }}, {{ insta.poblacion }}, {{ insta.provincia }}</p>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="row justify-content-center text-center mt-5">
+            <h4>Datos Actual</h4>
+            <div class="card mb-4 box-shadow color-primary" style="width:260px">
+                <div class="card-header">
+                    <h4>Temperatura</h4>
+                </div>
+                <div class="card-body align-items-center" style="height:80px">
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li>
+                            <h4>{{ json.temperatura|floatformat:1 }} ºC</h4>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card mb-4 box-shadow" style="width:260px">
+                <div class="card-header bg-sucess">
+                    <h4>Velocidad Viento</h4>
+                </div>
+                <div class="card-body align-items-center" style="height:80px">
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li>
+                            <h4>{{ json.viento|floatformat:1 }} km/h</h4>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card mb-4 box-shadow" style="width:260px">
+                <div class="card-header bg-sucess">
+                    <h4>Precipitación</h4>
+                </div>
+                <div class="card-body align-items-center" style="height:80px">
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li>
+                            <h4>{{ json.precipitacion }} l</h4>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card mb-4 box-shadow" style="width:260px">
+                <div class="card-header bg-sucess">
+                    <h4>Humedad Relativa</h4>
+                </div>
+                <div class="card-body align-items-center" style="height:80px">
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li>
+                            <h4>{{ json.humedad }} %</h4>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card mb-4 box-shadow" style="width:260px">
+                <div class="card-header bg-sucess">
+                    <h4>Estado Cielo</h4>
+                </div>
+                <div class="card-body align-items-center" style="height:80px">
+                    <ul class="list-unstyled">
+                        <li>
+                            {% load static %}
+                            <img src="{% static json.cielo %}" height="50" width="50">
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="row justify-content-center text-center mt-5">
+            <h4>Previsión Meteorológica</h4>
+
+            <table class="table table-striped table-sm mt-3 mb-5">
+                <tr>
+                    <th scope="col">Día</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Temperatura Máxima</th>
+                    <th scope="col">Temperatura Mínima</TH>
+                    <th scope="col">Índicie UV</th>
+                    <th scope="col">Precipitación</th>
+                    <th scope="col">Velocidad viento</th>
+                </tr>
+
+                <tr>
+                    <th>{{ fecha.1 }}</th>
+                    <th>{% load static %}
+                        <img src="{% static json.diario.weather_code_image.1 %}" height="30" width="30"></th>
+                    <th>{{ json.diario.temperature_2m_max.1 | floatformat:1 }}</th>
+                    <th>{{ json.diario.temperature_2m_min.1 | floatformat:1  }}</th>
+                    <th>{{ json.diario.uv_index_max.1 }}</th>
+                    <th>{{ json.diario.precipitation_sum.1 | floatformat:1 }}</th>
+                    <th>{{ json.diario.wind_speed_10m_max.1 | floatformat:1 }}</th>
+                </tr>
+                <tr>
+                    <th>{{ fecha.2 }}</th>
+                    <th>{% load static %}
+                        <img src="{% static json.diario.weather_code_image.2 %}" height="30" width="30"></th>
+                    <th>{{ json.diario.temperature_2m_max.2 | floatformat:1 }}</th>
+                    <th>{{ json.diario.temperature_2m_min.2 | floatformat:1  }}</th>
+                    <th>{{ json.diario.uv_index_max.2 }}</th>
+                    <th>{{ json.diario.precipitation_sum.2 | floatformat:1 }}</th>
+                    <th>{{ json.diario.wind_speed_10m_max.2 | floatformat:1 }}</th>
+                </tr>
+                <tr>
+                    <th>{{ fecha.3 }}</th>
+                    <th>{% load static %}
+                        <img src="{% static json.diario.weather_code_image.3 %}" height="30" width="30"></th>
+                    <th>{{ json.diario.temperature_2m_max.3 | floatformat:1 }}</th>
+                    <th>{{ json.diario.temperature_2m_min.3 | floatformat:1  }}</th>
+                    <th>{{ json.diario.uv_index_max.3 }}</th>
+                    <th>{{ json.diario.precipitation_sum.3 | floatformat:1 }}</th>
+                    <th>{{ json.diario.wind_speed_10m_max.3 | floatformat:1}}</th>
+                </tr>
+
+            </table>
+
+
+        </div>
+    </div>
+
+    {% endblock %}
+</body>
+</html>
