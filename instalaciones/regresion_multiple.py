@@ -52,7 +52,7 @@ def forward_selection(
 		return sorted(seleccion)
 
 def prediccion_energia(df_a_predecir):
-	df= pd.read_csv("./5-instalacion2.csv")
+	df= pd.read_csv("./5-instalacion3.csv")
 
 	#Se borran las columnas de fecha y el índice por ser irrelevantes
 	del df['date']
@@ -73,13 +73,12 @@ def prediccion_energia(df_a_predecir):
 
 										)
 
-	X_train = sm.add_constant(X_train, prepend=True).rename(columns={'const':'intercept'})
 
 	predictores = forward_selection(
 		X            = X_train,
 		y            = y_train,
 		criterio     = 'aic',
-		add_constant = False, # Ya se le añadió anteriormente
+		add_constant = False,
 		verbose      = True
 	)
 
